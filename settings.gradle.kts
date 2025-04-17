@@ -25,5 +25,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "QDemo"
+rootProject.name = "QAccount"
 include(":app")

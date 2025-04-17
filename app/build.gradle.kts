@@ -11,11 +11,11 @@ plugins {
 
 
 android {
-    namespace = "qzwx.app.qdemo"
+    namespace = "qzwx.app.qaccount"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "qzwx.app.qdemo"
+        applicationId = "qzwx.app.qaccount"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -73,7 +73,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.51.1") // 使用 Hilt
     ksp("com.google.dagger:hilt-compiler:2.51.1") // 使用 KSP 处理器
     //--------约束布局----------
-    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.1.1")
     //---------Room数据库---------
     val room_version = "2.6.1"
 

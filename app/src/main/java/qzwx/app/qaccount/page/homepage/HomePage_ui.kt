@@ -19,7 +19,9 @@ import androidx.constraintlayout.compose.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun Home_Topbar() {
-    TopAppBar(
+    TopAppBar(modifier = Modifier.wrapContentSize(),
+        colors = TopAppBarDefaults.
+                    topAppBarColors(MaterialTheme.colorScheme.background),
         title = {
             Row {
                 Text(
@@ -58,7 +60,10 @@ internal fun Home_statistics(modifier : Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp)
+            .padding(
+                top = 4.dp,
+                bottom = 8.dp
+            )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -85,7 +90,7 @@ internal fun Home_statistics(modifier : Modifier = Modifier) {
         }
         
         // 这里可以根据selectedTab显示对应的内容
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         when (selectedTab) {
             0 -> Home_JieYuCard()
             1 -> Home_netAssets()

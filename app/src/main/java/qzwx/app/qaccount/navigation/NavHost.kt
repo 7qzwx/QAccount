@@ -19,7 +19,7 @@ fun Q_NavHost(navController : NavHostController,modifier : Modifier) {
         startDestination = NavRoutes.HomePage
     ) {
         composable(NavRoutes.HomePage) { HomePage() }
-        composable(NavRoutes.MyPage) { MyPage() }
+        composable(NavRoutes.MyPage) { MyPage(navController) }
         composable(NavRoutes.AssetPage) { AssetPage() }
         composable(NavRoutes.StatisticsPage) { StatisticsPage() }
         composable(NavRoutes.AiAccount) { AiAccount() }

@@ -14,7 +14,7 @@ val bold = FontWeight.Bold
 
 // 加载自定义字体
 val QcustomFont = FontFamily(
-    Font(R.font.lxgwkaiti_regular),
+    Font(R.font.kaiti),
     Font(R.font.baoshijienum, FontWeight.Bold)
 )
 /**

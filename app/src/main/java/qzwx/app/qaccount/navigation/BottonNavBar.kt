@@ -95,7 +95,7 @@ fun BottomNavBar(navController: NavController) {
                     Icon(
                         imageVector = item.icon!!,
                         contentDescription = item.label,
-                        tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                        tint = if (isSelected) MaterialTheme.colorScheme.primary else Color.Gray.copy(alpha = 0.5f),
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.height(4.dp))

@@ -18,7 +18,7 @@ import androidx.constraintlayout.compose.*
 //topbar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun Home_Topbar(modifier : Modifier = Modifier) {
+internal fun Home_Topbar() {
     TopAppBar(
         title = {
             Row {
@@ -62,19 +62,21 @@ internal fun Home_statistics(modifier : Modifier = Modifier) {
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             StatisticsTab(
                 title = "本月结余",
                 isSelected = selectedTab == 0,
                 onClick = { selectedTab = 0 }
             )
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(20.dp))
             StatisticsTab(
                 title = "净资产",
                 isSelected = selectedTab == 1,
                 onClick = { selectedTab = 1 }
             )
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(20.dp))
             StatisticsTab(
                 title = "预算预览",
                 isSelected = selectedTab == 2,
@@ -86,8 +88,8 @@ internal fun Home_statistics(modifier : Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
         when (selectedTab) {
             0 -> Home_JieYuCard()
-            1 -> Text("净资产", style = MaterialTheme.typography.bodyMedium)
-            2 -> Text("预算预览", style = MaterialTheme.typography.bodyMedium)
+            1 -> Home_netAssets()
+            2 -> Home_BudgetCard()
         }
     }
 }
@@ -98,23 +100,44 @@ private fun StatisticsTab(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    Text(
-        text = title,
-        color = if (isSelected) 
-            MaterialTheme.colorScheme.onBackground 
-        else 
-            MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
-        style = if (isSelected)
-            MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold,
-                fontSize = MaterialTheme.typography.titleLarge.fontSize
+    Column{
+        Text(
+            text = title,
+            color = if (isSelected) 
+                MaterialTheme.colorScheme.onBackground 
+            else 
+                MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+            style = if (isSelected)
+                MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = MaterialTheme.typography.titleLarge.fontSize
+                )
+            else
+                MaterialTheme.typography.titleMedium,
+            modifier = Modifier.clickable(onClick = onClick, indication = null, interactionSource = remember { MutableInteractionSource() })
+        )
+        
+        // 底部指示器
+        Spacer(modifier = Modifier.height(4.dp))
+        if (isSelected) {
+            Box(
+                modifier = Modifier
+                    .width(40.dp)
+                    .height(3.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(
+                            topStart = 1.dp,
+                            topEnd = 1.dp
+                        )
+                    )
             )
-        else
-            MaterialTheme.typography.titleMedium,
-        modifier = Modifier.clickable(onClick = onClick, indication = null, interactionSource = remember { MutableInteractionSource() })
-    )
+        } else {
+            Spacer(modifier = Modifier.height(3.dp))
+        }
+    }
 }
-
+// 结余卡片
 @Composable
 private fun Home_JieYuCard() {
     ConstraintLayout(
@@ -186,7 +209,7 @@ private fun Home_JieYuCard() {
         )
         
         Text(
-            "￥本月支出",
+            "本月支出",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.constrainAs(spending) {
@@ -206,7 +229,174 @@ private fun Home_JieYuCard() {
         )
     }
 }
+//净资产卡片
+@Composable
+private fun Home_netAssets(modifier : Modifier = Modifier) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                1.dp,
+                MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f)
+            )
+            .padding(16.dp)
+    ) {
+        val (title, account, assets, debt, assetsNum, debtNum) = createRefs()
 
+        Text(
+            "本月结余（元）",
+            color = Color.Gray,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.constrainAs(title) {
+                top.linkTo(parent.top)
+                start.linkTo(parent.start)
+            }
+        )
+        Text(
+            "4500.00",
+            style = MaterialTheme.typography.titleLarge,
+            color =MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.constrainAs(account) {
+                top.linkTo(title.bottom,12.dp)
+                start.linkTo(parent.start)
+            }
+        )
+
+        Text(
+            "资产",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.constrainAs(assets) {
+                top.linkTo(account.bottom, 12.dp)
+                start.linkTo(parent.start)
+                bottom.linkTo(assetsNum.top, 4.dp)
+            }
+        )
+
+        Text(
+            "￥12000.00",
+            style = MaterialTheme.typography.bodySmall,
+            color = Color(0xFF4CAF50),
+            modifier = Modifier.constrainAs(assetsNum) {
+                top.linkTo(assets.bottom, 4.dp)
+                start.linkTo(parent.start)
+                bottom.linkTo(parent.bottom)
+            }
+        )
+
+        Text(
+            "负债",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.constrainAs(debt) {
+                bottom.linkTo(debtNum.top, 8.dp)
+                end.linkTo(parent.end)
+            }
+        )
+
+        Text(
+            "￥122200.00",
+            style = MaterialTheme.typography.bodySmall,
+            color = Color(0xFFE91E63),
+            modifier = Modifier.constrainAs(debtNum) {
+                bottom.linkTo(parent.bottom)
+                end.linkTo(parent.end)
+            }
+        )
+    }
+}
+//预算卡片
+@Composable
+fun Home_BudgetCard(modifier : Modifier = Modifier) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                1.dp,
+                MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f)
+            )
+            .padding(16.dp)
+    ) {
+        val (title, data, account, allBudget, spent, allBudgetNum, spentNum) = createRefs()
+
+        Text(
+            "剩余预算（元）",
+            color = Color.Gray,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.constrainAs(title) {
+                top.linkTo(parent.top)
+                start.linkTo(parent.start)
+            }
+        )
+        Row(
+            modifier = Modifier.constrainAs(data) {
+                top.linkTo(parent.top)
+                end.linkTo(parent.end)
+            },
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                "2025年4月",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray,
+
+                )
+            Icon(Icons.Outlined.ArrowDropDown, null, tint = Color.Gray)
+        }
+
+        Text(
+            "1800.00",
+            style = MaterialTheme.typography.titleLarge,
+            color =MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.constrainAs(account) {
+                top.linkTo(title.bottom,12.dp)
+                start.linkTo(parent.start)
+            }
+        )
+
+        Text(
+            "总预算",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.constrainAs(allBudget) {
+                top.linkTo(account.bottom, 12.dp)
+                start.linkTo(parent.start)
+                bottom.linkTo(allBudgetNum.top, 4.dp)
+            }
+        )
+
+        Text(
+            "￥1500.00",
+            style = MaterialTheme.typography.bodySmall,
+            color = Color(0xFF4CAF50),
+            modifier = Modifier.constrainAs(allBudgetNum) {
+                top.linkTo(allBudget.bottom, 4.dp)
+                start.linkTo(parent.start)
+                bottom.linkTo(parent.bottom)
+            }
+        )
+
+        Text(
+            "已使用",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.constrainAs(spent) {
+                bottom.linkTo(spentNum.top, 8.dp)
+                end.linkTo(parent.end)
+            }
+        )
+
+        Text(
+            "￥300.00",
+            style = MaterialTheme.typography.bodySmall,
+            color = Color(0xFFE91E63),
+            modifier = Modifier.constrainAs(spentNum) {
+                bottom.linkTo(parent.bottom)
+                end.linkTo(parent.end)
+            }
+        )
+    }
+}
 @Composable
 fun Home_FratureBtn(modifier : Modifier = Modifier) {
     Row(
@@ -220,25 +410,25 @@ fun Home_FratureBtn(modifier : Modifier = Modifier) {
             title = "自动记账",
             backgroundColor = Color(0xFFFFF8E1)
         )
-        
+
         FeatureButton(
             icon = Icons.Outlined.Book,
             title = "账本管理",
             backgroundColor = Color(0xFFFCE4EC)
         )
-        
+
         FeatureButton(
             icon = Icons.Outlined.AccountBalance,
             title = "资产管理",
             backgroundColor = Color(0xFFE3F2FD)
         )
-        
+
         FeatureButton(
             icon = Icons.Outlined.Timer,
             title = "定时记账",
             backgroundColor = Color(0xFFFBE9E7)
         )
-        
+
         FeatureButton(
             icon = Icons.Outlined.Calculate,
             title = "预算管理",
